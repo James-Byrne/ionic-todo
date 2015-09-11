@@ -8,29 +8,38 @@ angular.module('todo', ['ionic'])
 .factory('Projects', function() {
   return {
     all: function() {
-      var projectString = window.localStorage['projects'];
-      if(projectString) {
+      var projectString = window.localStorage.projects;
+      if (projectString) {
         return angular.fromJson(projectString);
       }
+
       return [];
     },
+
     save: function(projects) {
-      window.localStorage['projects'] = angular.toJson(projects);
+      window.localStorage.projects = angular.toJson(projects);
     },
+
+    delete: function(projects) {
+      window.localStorage.removeItem(projects);
+    },
+
     newProject: function(projectTitle) {
       //Add a new project
       return {
         title: projectTitle,
-        tasks: []
+        tasks: [],
       };
     },
-    getLastActiveIndex: function(){
-      return parseInt(window.localStorage['lastActiveProject']) || 0;
+
+    getLastActiveIndex: function() {
+      return parseInt(window.localStorage.lastActiveProject) || 0;
     },
+
     setLastActiveIndex: function(index) {
-      window.localStorage['lastActiveProject'] = index;
-    }
-  }
+      window.localStorage.lastActiveProject = index;
+    },
+  };
 })
 
 .controller('TodoCtrl', function($scope, $timeout, $ionicModal, Projects, $ionicSideMenuDelegate) {
@@ -41,8 +50,15 @@ angular.module('todo', ['ionic'])
     var newProject = Projects.newProject(projectTitle);
     $scope.projects.push(newProject);
     Projects.save($scope.projects);
-    $scope.selectProject(newProject, $scope.projects.length-1);
-  }
+    $scope.selectProject(newProject, $scope.projects.length - 1);
+  };
+
+  // A utility function for deleting a project once finsihed
+  var deleteProject = function(projectTitle) {
+    Projects.delete(projectTitle);
+    Projects.save($scope.projects);
+    $scope.selectProject(newProject, $scope.projects.length - 1);
+  };
 
   // Load or initialize projects
   $scope.projects = Projects.all();
@@ -53,10 +69,10 @@ angular.module('todo', ['ionic'])
   // Called to create a new project
   $scope.newProject = function() {
     var projectTitle = prompt('Project name');
-    if(projectTitle){
+    if (projectTitle) {
       createProject(projectTitle);
     }
-  }
+  };
 
   // Called to select the given Project
   $scope.selectProject = function(project, index) {
@@ -68,29 +84,45 @@ angular.module('todo', ['ionic'])
   //Create and load the Modal
   $ionicModal.fromTemplateUrl('new-task.html', function(modal) {
     $scope.taskModal = modal;
-  }, {
-    scope: $scope
-    //animation: 'slide-in-up'
+  },
+
+  {
+    scope: $scope,
   });
 
   // Called when the form is submitted
   $scope.createTask = function(task) {
-    if(!$scope.activeProject || !task) {
+    if (!$scope.activeProject || !task) {
       return;
     }
+
     $scope.activeProject.tasks.push({
-      title: task.title
+      title: task.title,
     });
     $scope.taskModal.hide();
 
     // Innefficient, but save all the projects
     Projects.save($scope.projects);
-    task.title = "";
+    task.title = '';
+  };
+
+  $scope.deleteTask = function(task) {
+    if (!$scope.activeProject || !task) {
+      return;
+    }
+
+    $scope.activeProject.tasks.pop({
+      title: task.title,
+    });
+
+    // Innefficient, but save all the projects
+    Projects.save($scope.projects);
+    task.title = '';
   };
 
   // Open the new task Modal
   $scope.newTask = function() {
-   $scope.taskModal.show();
+    $scope.taskModal.show();
   };
 
   //Close the new task Modal
@@ -106,8 +138,8 @@ angular.module('todo', ['ionic'])
   // this by using $timeout so everything is initialized
   // properly
   $timeout(function() {
-    if($scope.projects.lenght == 0) {
-      while(true) {
+    if ($scope.projects.lenght == 0) {
+      while (true) {
         var projectTitle = prompt('Your first project title: ');
         if (projectTitle) {
           createproject(projectTitle);
