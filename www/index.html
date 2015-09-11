@@ -34,7 +34,7 @@
           <ion-list show-delete="false" can-swipe="true">
             <ion-item ng-repeat="task in activeProject.tasks">
               {{task.title}}
-              <ion-option-button class="button-assertive icon ion-trash-a" ng-click="deleteTask(task)"></ion-option-button>
+              <ion-option-button class="button-assertive icon ion-trash-a" ng-click="deleteTask(task, $index)"></ion-option-button>
             </ion-item>
           </ion-list>
         </ion-content>
@@ -48,10 +48,11 @@
         <button class="button button-icon ion-plus" ng-click="newProject()">
         </button>
       </ion-header-bar>
-      <ion-content scroll="false">
-        <ion-list>
+      <ion-content scroll="true">
+        <ion-list show-delete="false" can-swipe="true">
           <ion-item ng-repeat="project in projects" ng-click="selectProject(project, $index)" ng-class="{active: activeProject == project}">
             {{project.title}}
+            <ion-option-button class="button-assertive icon ion-trash-a" ng-click="deleteProject(project, $index)"></ion-option-button>
           </ion-item>
         </ion-list>
       </ion-content>

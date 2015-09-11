@@ -20,8 +20,8 @@ angular.module('todo', ['ionic'])
       window.localStorage.projects = angular.toJson(projects);
     },
 
-    delete: function(projects) {
-      window.localStorage.removeItem(projects);
+    delete: function(project) {
+      window.localStorage.removeItem(project);
     },
 
     newProject: function(projectTitle) {
@@ -54,10 +54,8 @@ angular.module('todo', ['ionic'])
   };
 
   // A utility function for deleting a project once finsihed
-  var deleteProject = function(projectTitle) {
-    Projects.delete(projectTitle);
-    Projects.save($scope.projects);
-    $scope.selectProject(newProject, $scope.projects.length - 1);
+  var deleteProject = function(project) {
+    Projects.delete(project);
   };
 
   // Load or initialize projects
@@ -72,6 +70,12 @@ angular.module('todo', ['ionic'])
     if (projectTitle) {
       createProject(projectTitle);
     }
+  };
+
+  $scope.deleteProject = function(project, index) {
+    $scope.projects.splice(index, 1);
+    Projects.delete(project);
+    Projects.save($scope.projects);
   };
 
   // Called to select the given Project
@@ -106,18 +110,10 @@ angular.module('todo', ['ionic'])
     task.title = '';
   };
 
-  $scope.deleteTask = function(task) {
-    //if (!$scope.activeProject || !task) {
-    //  return;
-    //}
-
-    $scope.activeProject.tasks.pop({
-      title: task.title,
-    });
-
-    // Innefficient, but save all the projects
+  // Delete a task
+  $scope.deleteTask = function(task, index) {
+    $scope.activeProject.tasks.splice(index, 1);
     Projects.save($scope.projects);
-    task.title = '';
   };
 
   // Open the new task Modal
