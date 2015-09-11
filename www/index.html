@@ -19,7 +19,7 @@
 
       <!-- Center content -->
       <ion-side-menu-content>
-        <ion-header-bar class="bar-positive">
+        <ion-header-bar class="bar-calm">
           <button class="button button-icon" ng-click="toggleProjects()">
             <i class="icon ion-navicon"></i>
           </button>
@@ -29,12 +29,12 @@
             <i class="icon ion-compose"></i>
           </button>
         </ion-header-bar>
-        <ion-content scroll="false">
+        <ion-content scroll="true">
           <!-- list and list items-->
-          <ion-list show-delete="flase" can-swipe="true">
+          <ion-list show-delete="false" can-swipe="true">
             <ion-item ng-repeat="task in activeProject.tasks">
               {{task.title}}
-              <ion-option-button class="button-assertive icon ion-trash-a" ng-click="deleteTask()"></ion-option-button>
+              <ion-option-button class="button-assertive icon ion-trash-a" ng-click="deleteTask(task)"></ion-option-button>
             </ion-item>
           </ion-list>
         </ion-content>
@@ -42,7 +42,7 @@
 
       <!-- Left menu -->
     <ion-side-menu side="left">
-      <ion-header-bar class="bar-calm">
+      <ion-header-bar class="bar-positive">
         <h1 class="title">Projects</h1>
 
         <button class="button button-icon ion-plus" ng-click="newProject()">
@@ -82,7 +82,6 @@
         </ion-content>
       </div>
     </script>
-
 
   </ion-side-menus>
 

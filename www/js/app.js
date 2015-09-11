@@ -107,9 +107,9 @@ angular.module('todo', ['ionic'])
   };
 
   $scope.deleteTask = function(task) {
-    if (!$scope.activeProject || !task) {
-      return;
-    }
+    //if (!$scope.activeProject || !task) {
+    //  return;
+    //}
 
     $scope.activeProject.tasks.pop({
       title: task.title,
